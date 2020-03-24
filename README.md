@@ -1,2 +1,3 @@
-# lovegabe
- A set of Love2D tools for Gabe, by Gabe
+# Love, Gabe
+ 
+ A set of Love2D tools by Gabe D.
