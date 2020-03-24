@@ -80,4 +80,6 @@ function pixels.set_window_mode(window)
     love.window.setMode(w, h, window.settings)
 end
 
+gabe = {"pretty cool!"}
+
 return pixels
