@@ -109,6 +109,30 @@ end
 -- Pi
 PI = math.pi
 
+-- Approach (from GameMaker)
+function approach(start, target, shift)
+    if start < target then
+        return math.min(start + shift, target)
+    else
+        return math.max(start - shift, target)
+    end
+end
+
+-- Lengthdir X (from GameMaker)
+function lengthdir_x(len, dir)
+    return math.cos(dir) * len
+end
+
+-- Lengthdir Y (from GameMaker)
+function lengthdir_y(len, dir)
+    return math.sin(dir) * len
+end
+
+-- Lengthdir (x & y)
+function lengthdir(len, dir)
+    return math.cos(dir) * len, math.sin(dir) * len
+end
+
 ----------------------------------------
 -- Color Conversion (Love2D)
 ----------------------------------------
