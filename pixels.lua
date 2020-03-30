@@ -70,6 +70,7 @@ function pixels.draw_canvas(window, c)
     window = window or DEFAULT_WINDOW
     c = c or DEFAULT_CANVAS
     love.graphics.setCanvas()
+    love.graphics.setColor(1, 1, 1)
     love.graphics.draw(c, 0, 0, 0, window.zoom, window.zoom)
 end
 
