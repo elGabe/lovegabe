@@ -14,7 +14,10 @@ end
 
 -- Deletes an element (e) from a table (t)
 function del(t, e)
-    table.remove(t, e)
+    for i = #t, 1, -1 do
+        local _e = t[i]
+        if e == _e then table.remove(t, i) end
+    end
 end
 
 ----------------------------------------
