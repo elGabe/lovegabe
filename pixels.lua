@@ -3,6 +3,8 @@
 
 -- V1
 
+local utils = require "lovegabe.utils"
+
 pixels = {}
 
 -- Window Settings
@@ -61,7 +63,7 @@ end
 function pixels.begin_canvas(c)
     c = c or DEFAULT_CANVAS
     love.graphics.setCanvas(c)
-    love.graphics.clear(rgb(30, 30, 30))
+    love.graphics.clear(utils.rgb(30, 30, 30))
 end
 
 -- Draw pixel-perfect canvas
