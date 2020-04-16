@@ -165,3 +165,18 @@ function hsl(h, s, l, a)
 	else              r,g,b = c,0,x
 	end return (r+m)*255,(g+m)*255,(b+m)*255,a
 end
+
+----------------------------------------
+-- Reading Files
+----------------------------------------
+
+function read_file(path)
+    local file = io.open(path, "rb")
+    if not file then 
+        print("Could not find file at "..path)
+        return nil
+    end
+    local content = file:read "*a"
+    file:close()
+    return content
+end
