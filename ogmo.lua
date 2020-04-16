@@ -1,12 +1,13 @@
-require "utils"
-local json = require "json"
 
+local json = require "lovegabe.json"
+local utils = require "lovegabe.utils"
 local ogmo = {}
 
 function ogmo.read_map(path)
-    local data = {}
-    local string = read_file(path)
-    data = json.decode(string)
+    local map = {}
+    local string = utils.read_file(path)
+    map = json.decode(string)
+    return map
 end
 
 return ogmo
