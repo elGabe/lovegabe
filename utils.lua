@@ -94,4 +94,37 @@ function utils.read_file(path)
     return content
 end
 
+----------------------------------------
+-- Sprite Sheets
+----------------------------------------
+
+-- Creates a new sprite
+function utils.new_sprite(texture, x, y, w, h)
+    local sprite = {}
+    if texture == nil then error("No 'texture' was given to sprite") return end
+    sprite.texture = texture
+    sprite.x = x or 0
+    sprite.y = y or 0
+    sprite.width = w or 8
+    sprite.height = h or 8
+
+    sprite.frames = {}
+    sprite.frame = 1
+
+sprite.new_frame = function(sprite, uvx, uvy)
+    local frame = love.graphics.newQuad(uvx, uvy, sprite.width, sprite.height, sprite.texture:getDimensions())
+    utils.add(sprite.frames, frame)
+end
+
+sprite.draw = function()
+    if #sprite.frames > 0 then
+        love.graphics.draw(sprite.texture, sprite.frames[sprite.frame], sprite.x, sprite.y)
+    else
+        love.graphics.draw(sprite.texture, sprite.x, sprite.y)
+    end
+end
+
+    return sprite
+end
+
 return utils
