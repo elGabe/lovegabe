@@ -127,4 +127,68 @@ end
     return sprite
 end
 
+----------------------------------------
+-- Collision
+----------------------------------------
+
+function utils.make_AABB(x, y, w, h)
+    local aabb = {}
+    aabb.x1 = x
+    aabb.y1 = y
+    aabb.w = w
+    aabb.h = h
+    aabb.x2 = aabb.x1 + aabb.w
+    aabb.y2 = aabb.y1 + aabb.h
+
+function aabb:update(x, y)
+    aabb.x1 = x
+    aabb.y1 = y
+    aabb.x2 = aabb.x1 + aabb.w
+    aabb.y2 = aabb.y1 + aabb.h
+end
+
+function aabb:draw(color)
+    color = color or utils.rgb(0, 255, 0)
+    love.graphics.setColor(color)
+    love.graphics.rectangle("line", aabb.x1, aabb.y1, aabb.w, aabb.h)
+end
+
+    return aabb
+end
+
+function utils.overlap(box1, box2)
+    return not (box1.x1 > box2.x2 
+                or box1.y1 > box2.y2 
+                or box1.x2 < box2.x1 
+                or box1.y2 < box2.y1)
+end
+
+----------------------------------------
+-- Timers
+----------------------------------------
+
+local TIMERS = {}
+
+function utils.every_n_seconds(time, callback)
+    local timer = {}
+    timer.time = time
+    timer.current = time
+    timer.callback = callback
+
+function timer:update(dt)
+    timer.current = timer.current - dt
+
+    if timer.current < 0 then
+        timer.callback()
+        timer.current = timer.time
+    end
+end
+
+function timer:stop()
+    utils.del(TIMERS, timer)
+end
+    utils.add(TIMERS, timer)
+    return timer
+end
+
 return utils
