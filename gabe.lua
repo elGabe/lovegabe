@@ -1,7 +1,7 @@
 -- Utilities for love2D programming
 -- By Gabe <3
 
-local utils = {}
+local gabe = {}
 
 -- V1
 
@@ -10,12 +10,12 @@ local utils = {}
 -----------------------------------------
 
 -- Adds an element (e) into a table (t)
-function utils.add(t, e)
+function gabe.add(t, e)
     table.insert(t, e)
 end
 
 -- Deletes an element (e) from a table (t)
-function utils.del(t, e)
+function gabe.del(t, e)
     for i = #t, 1, -1 do
         local _e = t[i]
         if e == _e then table.remove(t, i) end
@@ -23,7 +23,7 @@ function utils.del(t, e)
 end
 
 -- Approach (from GameMaker)
-function utils.approach(start, target, shift)
+function gabe.approach(start, target, shift)
     if start < target then
         return math.min(start + shift, target)
     else
@@ -32,17 +32,17 @@ function utils.approach(start, target, shift)
 end
 
 -- Lengthdir X (from GameMaker)
-function utils.lengthdir_x(len, dir)
+function gabe.lengthdir_x(len, dir)
     return math.cos(dir) * len
 end
 
 -- Lengthdir Y (from GameMaker)
-function utils.lengthdir_y(len, dir)
+function gabe.lengthdir_y(len, dir)
     return math.sin(dir) * len
 end
 
 -- Lengthdir (x & y)
-function utils.lengthdir(len, dir)
+function gabe.lengthdir(len, dir)
     return math.cos(dir) * len, math.sin(dir) * len
 end
 
@@ -52,19 +52,19 @@ end
 
 -- Maps RGB color from 0-255 to 0-1
 -- Assumes 100% opacity
-function utils.rgb(r, g, b)
+function gabe.rgb(r, g, b)
     local r1, g1, b1 = r/255, g/255, b/255
     return {r1, g1, b1, 1}
 end
 
 -- Maps RGB color from 0-255 to 0-1
-function utils.rgba(r, g, b, a)
+function gabe.rgba(r, g, b, a)
     local r1, g1, b1, a1 = r/255, g/255, b/255, a/255
     return {r1, g1, b1, a1}
 end
 
 -- Converts HSL color to RGB
-function utils.hsl(h, s, l, a)
+function gabe.hsl(h, s, l, a)
 	if s<=0 then return l,l,l,a end
 	h, s, l = h/256*6, s/255, l/255
 	local c = (1-math.abs(2*l-1))*s
@@ -83,7 +83,7 @@ end
 -- Reading Files
 ----------------------------------------
 
-function utils.read_file(path)
+function gabe.read_file(path)
     local file = io.open(path, "rb")
     if not file then 
         print("Could not find file at "..path)
@@ -99,7 +99,7 @@ end
 ----------------------------------------
 
 -- Creates a new sprite
-function utils.new_sprite(texture, x, y, w, h)
+function gabe.new_sprite(texture, x, y, w, h)
     local sprite = {}
     if texture == nil then error("No 'texture' was given to sprite") return end
     sprite.texture = texture
@@ -113,7 +113,7 @@ function utils.new_sprite(texture, x, y, w, h)
 
 sprite.new_frame = function(sprite, uvx, uvy)
     local frame = love.graphics.newQuad(uvx, uvy, sprite.width, sprite.height, sprite.texture:getDimensions())
-    utils.add(sprite.frames, frame)
+    gabe.add(sprite.frames, frame)
 end
 
 sprite.draw = function()
@@ -131,7 +131,7 @@ end
 -- Collision
 ----------------------------------------
 
-function utils.make_AABB(x, y, w, h)
+function gabe.make_AABB(x, y, w, h)
     local aabb = {}
     aabb.x1 = x
     aabb.y1 = y
@@ -148,7 +148,7 @@ function aabb:update(x, y)
 end
 
 function aabb:draw(color)
-    color = color or utils.rgb(0, 255, 0)
+    color = color or gabe.rgb(0, 255, 0)
     love.graphics.setColor(color)
     love.graphics.rectangle("line", aabb.x1, aabb.y1, aabb.w, aabb.h)
 end
@@ -156,7 +156,7 @@ end
     return aabb
 end
 
-function utils.overlap(box1, box2)
+function gabe.overlap(box1, box2)
     return not (box1.x1 > box2.x2 
                 or box1.y1 > box2.y2 
                 or box1.x2 < box2.x1 
@@ -169,7 +169,7 @@ end
 
 local TIMERS = {}
 
-function utils.every_n_seconds(time, callback)
+function gabe.every_n_seconds(time, callback)
     local timer = {}
     timer.time = time
     timer.current = time
@@ -185,10 +185,10 @@ function timer:update(dt)
 end
 
 function timer:stop()
-    utils.del(TIMERS, timer)
+    gabe.del(TIMERS, timer)
 end
-    utils.add(TIMERS, timer)
+    gabe.add(TIMERS, timer)
     return timer
 end
 
-return utils
+return gabe
