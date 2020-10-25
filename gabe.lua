@@ -127,13 +127,13 @@ function gabe.make_sprite(texture, w, h, frames)
         end
     end
 
-sprite.make_frame = function(uvx, uvy)
+function sprite:make_frame(uvx, uvy)
     local frame = love.graphics.newQuad(uvx * sprite.width, uvy * sprite.height, sprite.width, sprite.height, sprite.texture:getDimensions())
     gabe.add(sprite.frames, frame)
 end
 
 -- [TODO: Figure out animation!]
-sprite.draw = function(x, y)
+function sprite:draw(x, y)
     if #sprite.frames > 0 then
         love.graphics.draw(sprite.texture, sprite.frames[sprite.frame], x, y)
     else
@@ -186,6 +186,12 @@ end
 
 local TIMERS = {}
 
+function gabe.update_timers(dt)
+    for t in TIMERS do
+        t:update(dt)
+    end
+end
+
 function gabe.every_n_seconds(time, callback)
     local timer = {}
     timer.time = time
@@ -198,6 +204,28 @@ function timer:update(dt)
     if timer.current < 0 then
         timer.callback()
         timer.current = timer.time
+    end
+end
+
+function timer:stop()
+    gabe.del(TIMERS, timer)
+end
+    gabe.add(TIMERS, timer)
+    return timer
+end
+
+function gabe.wait_n_seconds(time, callback)
+    local timer = {}
+    timer.time = time
+    timer.current = time
+    timer.callback = callback
+
+function timer:update(dt)
+    timer.current = timer.current - dt
+
+    if timer.current < 0 then
+        timer.callback()
+        gabe.del(TIMERS, timer)
     end
 end
 
