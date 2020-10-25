@@ -3,16 +3,12 @@
 
 local gabe = {}
 
--- V1
-
 -----------------------------------------
 -- Tables
 -----------------------------------------
 
--- Adds an element (e) into a table (t)
-function gabe.add(t, e)
-    table.insert(t, e)
-end
+-- Alias for lua's 'table.insert' function
+gabe.add = table.insert
 
 -- Deletes an element (e) from a table (t)
 function gabe.del(t, e)
@@ -21,6 +17,10 @@ function gabe.del(t, e)
         if e == _e then table.remove(t, i) end
     end
 end
+
+-----------------------------------------
+-- Maths
+-----------------------------------------
 
 -- Approach (from GameMaker)
 function gabe.approach(start, target, shift)
@@ -99,28 +99,45 @@ end
 ----------------------------------------
 
 -- Creates a new sprite
-function gabe.new_sprite(texture, x, y, w, h)
+function gabe.make_sprite(texture, w, h, frames)
     local sprite = {}
     if texture == nil then error("No 'texture' was given to sprite") return end
     sprite.texture = texture
-    sprite.x = x or 0
-    sprite.y = y or 0
     sprite.width = w or 8
     sprite.height = h or 8
 
     sprite.frames = {}
     sprite.frame = 1
 
-sprite.new_frame = function(sprite, uvx, uvy)
-    local frame = love.graphics.newQuad(uvx, uvy, sprite.width, sprite.height, sprite.texture:getDimensions())
+    -- Number of frames must be at least 1
+    local _frames = frames or 1
+    -- Stay safe and force it to be a possitive, non-zero value
+    if (_frames <= 0) then _frames = 1 end
+
+    if (_frames > 1) then
+        -- Splits the image into frame cells
+        local cells_x = sprite.texture:getWidth() / sprite.width
+        local cells_y = sprite.texture:getHeight() / sprite.height
+
+        for uv_x = 0, cells_x-1 do
+            for uv_y = 0, cells_y-1 do
+                local frame = love.graphics.newQuad(uv_x * sprite.width, uv_y * sprite.height, sprite.width, sprite.height, sprite.texture:getDimensions())
+                gabe.add(sprite.frames, frame)
+            end
+        end
+    end
+
+sprite.make_frame = function(uvx, uvy)
+    local frame = love.graphics.newQuad(uvx * sprite.width, uvy * sprite.height, sprite.width, sprite.height, sprite.texture:getDimensions())
     gabe.add(sprite.frames, frame)
 end
 
-sprite.draw = function()
+-- [TODO: Figure out animation!]
+sprite.draw = function(x, y)
     if #sprite.frames > 0 then
-        love.graphics.draw(sprite.texture, sprite.frames[sprite.frame], sprite.x, sprite.y)
+        love.graphics.draw(sprite.texture, sprite.frames[sprite.frame], x, y)
     else
-        love.graphics.draw(sprite.texture, sprite.x, sprite.y)
+        love.graphics.draw(sprite.texture, x, y)
     end
 end
 
