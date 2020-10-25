@@ -107,7 +107,7 @@ function gabe.make_sprite(texture, w, h, frames)
     sprite.height = h or 8
 
     sprite.frames = {}
-    sprite.frame = 1
+    sprite.frame_index = 1
 
     -- Number of frames must be at least 1
     local _frames = frames or 1
@@ -135,7 +135,7 @@ end
 -- [TODO: Figure out animation!]
 function sprite:draw(x, y, angle)
     if #sprite.frames > 0 then
-        love.graphics.draw(sprite.texture, sprite.frames[sprite.frame], x, y, angle)
+        love.graphics.draw(sprite.texture, sprite.frames[sprite.frame_index], x, y, angle)
     else
         love.graphics.draw(sprite.texture, x, y, angle)
     end
