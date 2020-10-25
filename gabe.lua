@@ -133,11 +133,11 @@ function sprite:make_frame(uvx, uvy)
 end
 
 -- [TODO: Figure out animation!]
-function sprite:draw(x, y)
+function sprite:draw(x, y, angle)
     if #sprite.frames > 0 then
-        love.graphics.draw(sprite.texture, sprite.frames[sprite.frame], x, y)
+        love.graphics.draw(sprite.texture, sprite.frames[sprite.frame], x, y, angle)
     else
-        love.graphics.draw(sprite.texture, x, y)
+        love.graphics.draw(sprite.texture, x, y, angle)
     end
 end
 
@@ -235,6 +235,76 @@ function timer:stop()
 end
     gabe.add(TIMERS, timer)
     return timer
+end
+
+
+----------------------------------------
+-- Virtual Screens
+----------------------------------------
+
+gabe.DEFAULT_WINDOW_SETTINGS = {
+    fullscreen = false,
+    fullscreentype = "desktop",
+    vsync = false,
+    msaa = 0,
+    resizable = true
+}
+
+gabe.DEFAULT_WINDOW = {
+    128,                             -- Pixel Width
+    128,                             -- Pixel Height
+    4,                               -- Window Scale
+    gabe.DEFAULT_WINDOW_SETTINGS     -- Settings
+}
+
+gabe.DEFAULT_CANVAS = {}
+
+function gabe.make_window(width, height, scale, settings)
+    scale = scale or 1
+    settings = settings or gabe.DEFAULT_WINDOW_SETTINGS
+
+    local window = {}
+    window.width = width * scale
+    window.height = height * scale
+    window.scale = scale
+    window.settings = settings
+    love.window.setMode(window.width, window.height, window.settings)
+    return window
+end
+
+function gabe.make_pixel_screen(window)
+    window = window or gabe.DEFAULT_WINDOW
+    -- Make a pixel-perfect canvas
+    DEFAULT_CANVAS = gabe.make_canvas(window)
+    return DEFAULT_CANVAS
+end
+
+function gabe.make_canvas(window)
+    window = window or gabe.DEFAULT_WINDOW
+    love.graphics.setDefaultFilter("nearest", "nearest")
+    local canvas = love.graphics.newCanvas(window.width/window.scale, window.height/window.scale)
+    canvas:setFilter("nearest", "nearest")
+    return canvas
+end
+
+function gabe.begin_pixel_screen(canvas)
+    canvas = canvas or gabe.DEFAULT_CANVAS
+    love.graphics.setCanvas(canvas)
+    love.graphics.clear(gabe.rgb(30, 30, 30))
+end
+
+function gabe.end_pixel_screen(window, canvas)
+    window = window or gabe.DEFAULT_WINDOW
+    canvas = canvas or gabe.DEFAULT_CANVAS
+    love.graphics.setCanvas()
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(canvas, 0, 0, 0, window.scale, window.scale)
+end
+
+function gabe.draw_pixel_screen(window, canvas, drawcode)
+    gabe.begin_pixel_screen(canvas)
+    drawcode()
+    gabe.end_pixel_screen(window, canvas)
 end
 
 return gabe
