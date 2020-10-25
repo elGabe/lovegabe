@@ -187,8 +187,9 @@ end
 local TIMERS = {}
 
 function gabe.update_timers(dt)
-    for t in TIMERS do
-        t:update(dt)
+    for i = #TIMERS, 1, -1 do
+        
+        TIMERS[i]:update(dt)
     end
 end
 
