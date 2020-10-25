@@ -13,6 +13,8 @@ A set of Love2D tools by Gabe D.
   - [rgba](#rgba)
   - [hsl](#hsl)
   - [read_file](#read_file)
+- [Sprites](#sprites)
+  - [make_sprite](#make_sprite)
 - [Ogmo](#ogmo)
   - [read_map](#read_map)
 ---
@@ -64,7 +66,10 @@ Converts HSL color to RGB. Inputs and outputs 0-255 range.
 ### read_file
 Reads a file located at `path` and returns its contents as a string.
 
----
+## Sprites
+### make_sprite
+Creates a sprite object from **'texture'** with a size of **'width'** and **'height'**. The sprite will contain **'frames'** number of frames or subimages.
+
 ## Ogmo
 ### read_map
 Reads a .json map file located at `path` and creates a map table to hold its values.
