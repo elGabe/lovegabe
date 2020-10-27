@@ -80,21 +80,6 @@ function gabe.hsl(h, s, l, a)
 end
 
 ----------------------------------------
--- Reading Files
-----------------------------------------
-
-function gabe.read_file(path)
-    local file = io.open(path, "rb")
-    if not file then 
-        print("Could not find file at "..path)
-        return nil
-    end
-    local content = file:read "*a"
-    file:close()
-    return content
-end
-
-----------------------------------------
 -- Sprite Sheets
 ----------------------------------------
 
@@ -182,9 +167,9 @@ end
 end
 
 function gabe.overlap(box1, box2)
-    return not (box1.x1 > box2.x2 
-                or box1.y1 > box2.y2 
-                or box1.x2 < box2.x1 
+    return not (box1.x1 > box2.x2
+                or box1.y1 > box2.y2
+                or box1.x2 < box2.x1
                 or box1.y2 < box2.y1)
 end
 
@@ -196,7 +181,7 @@ local TIMERS = {}
 
 function gabe.update_timers(dt)
     for i = #TIMERS, 1, -1 do
-        
+
         TIMERS[i]:update(dt)
     end
 end
