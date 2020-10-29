@@ -24,11 +24,14 @@ function ogmo.read_map(path, texture)
         -- Check if this is an entity layer
         if layer.entities ~= nil then
             add(map.entities, layer)
+        end
         
         -- Check if layer has data
-        elseif layer.data2D ~= nil or layer.data ~= nil then
+        if layer.data ~= nil then
             add(map.tiles, layer)
         end
+
+        --[TODO] Unpack data2D into 1D array and run through same process
     end
 
     -- Information to split the texture
@@ -55,15 +58,18 @@ function map:draw()
     for l = #map.tiles, 1, -1 do
         local layer = map.tiles[l]
 
-        for i = 0, #layer.data-1 do 
-            local xx = math.floor(i % grid_width)
-            local yy = math.floor(i / grid_height)
-            local tile_index = layer.data[i+1]
-            if (tile_index >= 0) then
-                love.graphics.draw(map.texture, map.subimages[tile_index+1], xx * cell_width, yy * cell_height)
+        for i = 1, grid_width-1, 1 do
+            for j = 1, grid_height-1, 1 do
+                -- This is the index of the tile to draw
+                local tile = layer.data[i+j*grid_width]
+                print(tile)
+                local xx = cell_width * (i-1)
+                local yy = cell_height * (j-1)
+                if (tile ~= -1) then
+                    love.graphics.draw(map.texture, map.subimages[tile+1], xx, yy)
+                end
             end
         end
-
     end
 
 end
