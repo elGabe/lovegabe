@@ -58,13 +58,31 @@ function map:draw()
     for l = #map.tiles, 1, -1 do
         local layer = map.tiles[l]
 
-        for i = 1, grid_width-1, 1 do
-            for j = 1, grid_height-1, 1 do
+--[[         for i = 0, grid_width-1, 1 do
+            for j = 0, grid_height-1, 1 do
+
                 -- This is the index of the tile to draw
-                local tile = layer.data[i+j*grid_width]
+                local tile_index = (i*grid_width+j) + 1
+                local tile = layer.data[tile_index]
                 print(tile)
-                local xx = cell_width * (i-1)
-                local yy = cell_height * (j-1)
+                
+                local xx = cell_width * i
+                
+                local yy = cell_height * j
+                
+                if (tile ~= -1) then
+                    love.graphics.draw(map.texture, map.subimages[tile+1], xx, yy)
+                end
+
+            end
+        end ]]
+
+        for y = 0, grid_height-1 do
+            for x = 0, grid_width-1 do
+                local tile = layer.data[(y * grid_width + x) + 1]
+                local xx = cell_width * x
+                local yy = cell_height * y
+
                 if (tile ~= -1) then
                     love.graphics.draw(map.texture, map.subimages[tile+1], xx, yy)
                 end
