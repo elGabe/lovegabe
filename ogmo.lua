@@ -31,7 +31,9 @@ function ogmo.read_map(path, texture)
             add(map.tiles, layer)
         end
 
-        --[TODO] Unpack data2D into 1D array and run through same process
+        if (layer.data2D ~= nil) then
+            --[TODO] Unpack data2D into 1D array and run through same process
+        end
     end
 
     -- Information to split the texture
@@ -57,25 +59,6 @@ function map:draw()
     -- Loop through the tiles to draw
     for l = #map.tiles, 1, -1 do
         local layer = map.tiles[l]
-
---[[         for i = 0, grid_width-1, 1 do
-            for j = 0, grid_height-1, 1 do
-
-                -- This is the index of the tile to draw
-                local tile_index = (i*grid_width+j) + 1
-                local tile = layer.data[tile_index]
-                print(tile)
-                
-                local xx = cell_width * i
-                
-                local yy = cell_height * j
-                
-                if (tile ~= -1) then
-                    love.graphics.draw(map.texture, map.subimages[tile+1], xx, yy)
-                end
-
-            end
-        end ]]
 
         for y = 0, grid_height-1 do
             for x = 0, grid_width-1 do
