@@ -46,6 +46,10 @@ function gabe.lengthdir(len, dir)
     return math.cos(dir) * len, math.sin(dir) * len
 end
 
+function gabe.lerp(a, b, t)
+    return a + t * (b - a)
+end
+
 ----------------------------------------
 -- Color Conversion (Love2D)
 ----------------------------------------
@@ -161,6 +165,7 @@ function aabb:draw(color)
     color = color or gabe.rgb(0, 255, 0)
     love.graphics.setColor(color)
     love.graphics.rectangle("line", aabb.x1, aabb.y1, aabb.w, aabb.h)
+    love.graphics.setColor(1, 1, 1, 1)
 end
 
     return aabb
