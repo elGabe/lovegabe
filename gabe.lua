@@ -171,11 +171,12 @@ end
     return aabb
 end
 
-function gabe.overlap(box1, box2)
-    return not (box1.x1 > box2.x2
-                or box1.y1 > box2.y2
-                or box1.x2 < box2.x1
-                or box1.y2 < box2.y1)
+function gabe.overlap(box1, box2, dx, dy)
+    local dx, dy = dx or 0, dy or 0
+    return not (box1.x1 + dx > box2.x2
+                or box1.y1 + dy > box2.y2
+                or box1.x2 + dx < box2.x1
+                or box1.y2 + dy < box2.y1)
 end
 
 ----------------------------------------

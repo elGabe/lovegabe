@@ -1,5 +1,6 @@
 
 local json = require "lovegabe.json"
+local gabe = require "lovegabe.gabe"
 local ogmo = {}
 
 add = table.insert
@@ -15,6 +16,7 @@ function ogmo.read_map(path, texture)
     map.entities = {}
     map.width = map.data.width
     map.height = map.data.height
+    map.solids = {}
 
     -- Loop through all layers
     for l = 1, #map.data.layers do
@@ -34,9 +36,12 @@ function ogmo.read_map(path, texture)
         if (layer.data2D ~= nil) then
             --[TODO] Unpack data2D into 1D array and run through same process
         end
+
+        -- This layer represents solids
+        if (string.lower(layer.name) == "solids") then
+            map.solids = layer.data
+        end
     end
-
-
 
     -- Information to split the texture
     local cell_width = map.data.layers[1].gridCellWidth
@@ -53,6 +58,21 @@ function ogmo.read_map(path, texture)
         for uvx = 0, (texture_width / cell_width) - 1 do
             local quad = love.graphics.newQuad(uvx * cell_width, uvy * cell_height, cell_width, cell_height, map.texture:getDimensions())
             add(map.subimages, quad)
+        end
+    end
+
+    function map:make_solids(table)
+        for y = 0, grid_height-1 do
+            for x = 0, grid_width-1 do
+                local tile = map.solids[(y * grid_width + x) + 1]
+                local xx = cell_width * x
+                local yy = cell_height * y
+
+                if (tile ~= -1) then
+                    local solid = gabe.make_AABB(xx, yy, cell_width, cell_height)
+                    add(table, solid)
+                end
+            end
         end
     end
 
