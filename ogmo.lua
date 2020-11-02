@@ -111,7 +111,7 @@ function map:draw_layer(layer_index)
             local yy = cell_height * y
 
             if (tile ~= -1) then
-                lovedraw(map.texture, map.subimages[tile+1], xx, yy)
+                love_draw(map.texture, map.subimages[tile+1], xx, yy)
             end
         end
     end
