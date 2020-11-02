@@ -1,5 +1,6 @@
 
 local json = require "lovegabe.json"
+local gabe = require "lovegabe.gabe"
 local ogmo = {}
 
 add = table.insert
@@ -11,28 +12,34 @@ function ogmo.read_map(path, texture)
     local string = love.filesystem.read(path)
     map.data = json.decode(string)
 
-    map.tiles = {}
+    map.tiles_layer = {}
     map.entities = {}
     map.width = map.data.width
     map.height = map.data.height
+    map.solids = {}
 
     -- Loop through all layers
-    for l = #map.data.layers, 1, -1 do
+    for l = 1, #map.data.layers do
         -- Get current layer
         local layer = map.data.layers[l]
         
         -- Check if this is an entity layer
         if layer.entities ~= nil then
-            add(map.entities, layer)
+            map.entities = layer.entities
         end
         
         -- Check if layer has data
         if layer.data ~= nil then
-            add(map.tiles, layer)
+            add(map.tiles_layer, layer)
         end
 
         if (layer.data2D ~= nil) then
             --[TODO] Unpack data2D into 1D array and run through same process
+        end
+
+        -- This layer represents solids
+        if (string.lower(layer.name) == "solids") then
+            map.solids = layer.data
         end
     end
 
@@ -58,11 +65,26 @@ function ogmo.read_map(path, texture)
         end
     end
 
+    function map:make_solids(table)
+        for y = 0, grid_height-1 do
+            for x = 0, grid_width-1 do
+                local tile = map.solids[(y * grid_width + x) + 1]
+                local xx = cell_width * x
+                local yy = cell_height * y
+
+                if (tile ~= -1) then
+                    local solid = gabe.make_AABB(xx, yy, cell_width, cell_height)
+                    add(table, solid)
+                end
+            end
+        end
+    end
+
 function map:draw()
 
     -- Loop through the tiles to draw
-    for l = #map.tiles, 1, -1 do
-        local layer = map.tiles[l]
+    for l = #map.tiles_layer, 1, -1 do
+        local layer = map.tiles_layer[l]
 
         for y = 0, grid_height-1 do
             for x = 0, grid_width-1 do
@@ -71,13 +93,28 @@ function map:draw()
                 local yy = cell_height * y
 
                 if (tile ~= -1) then
-                    local lovedraw = love.graphics.draw
                     love_draw(map.texture, map.subimages[tile+1], xx, yy)
                 end
             end
         end
     end
 
+end
+
+function map:draw_layer(layer_index)
+    local layer = map.tiles_layer[layer_index]
+
+    for y = 0, grid_height-1 do
+        for x = 0, grid_width-1 do
+            local tile = layer.data[(y * grid_width + x) + 1]
+            local xx = cell_width * x
+            local yy = cell_height * y
+
+            if (tile ~= -1) then
+                lovedraw(map.texture, map.subimages[tile+1], xx, yy)
+            end
+        end
+    end
 end
 
     return map
