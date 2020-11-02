@@ -46,10 +46,14 @@ function ogmo.read_map(path, texture)
 
     map.subimages = {}
 
+    -- locals instead of globals for performance
+    local love_draw = love.graphics.draw
+    local love_quad = love.graphics.newQuad
+
     -- Splitting texture into individual tile images
     for uvy = 0, (texture_height / cell_height) - 1 do
         for uvx = 0, (texture_width / cell_width) - 1 do
-            local quad = love.graphics.newQuad(uvx * cell_width, uvy * cell_height, cell_width, cell_height, map.texture:getDimensions())
+            local quad = love_quad(uvx * cell_width, uvy * cell_height, cell_width, cell_height, map.texture:getDimensions())
             add(map.subimages, quad)
         end
     end
@@ -67,7 +71,8 @@ function map:draw()
                 local yy = cell_height * y
 
                 if (tile ~= -1) then
-                    love.graphics.draw(map.texture, map.subimages[tile+1], xx, yy)
+                    local lovedraw = love.graphics.draw
+                    love_draw(map.texture, map.subimages[tile+1], xx, yy)
                 end
             end
         end
