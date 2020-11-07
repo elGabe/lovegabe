@@ -253,20 +253,22 @@ gabe.DEFAULT_WINDOW = {
     128,                             -- Pixel Width
     128,                             -- Pixel Height
     4,                               -- Window Scale
-    gabe.DEFAULT_WINDOW_SETTINGS     -- Settings
+    gabe.DEFAULT_WINDOW_SETTINGS,    -- Settings
+    gabe.rgb(30, 30, 30)
 }
 
 gabe.DEFAULT_CANVAS = {}
 
-function gabe.make_window(width, height, scale, settings)
+function gabe.make_window(width, height, scale, settings, clear_color)
     scale = scale or 1
     settings = settings or gabe.DEFAULT_WINDOW_SETTINGS
-
+    clear_color = clear_color or gabe.rgb(30, 30, 30)
     local window = {}
     window.width = width * scale
     window.height = height * scale
     window.scale = scale
     window.settings = settings
+    window.clear_color = clear_color
     love.window.setMode(window.width, window.height, window.settings)
     return window
 end
@@ -286,10 +288,11 @@ function gabe.make_canvas(window)
     return canvas
 end
 
-function gabe.begin_pixel_screen(canvas)
+function gabe.begin_pixel_screen(canvas, clear_color)
     canvas = canvas or gabe.DEFAULT_CANVAS
+    clear_color = clear_color or gabe.rgb(30, 30, 30)
     love.graphics.setCanvas(canvas)
-    love.graphics.clear(gabe.rgb(30, 30, 30))
+    love.graphics.clear(clear_color)
 end
 
 function gabe.end_pixel_screen(window, canvas)
@@ -301,7 +304,7 @@ function gabe.end_pixel_screen(window, canvas)
 end
 
 function gabe.draw_pixel_screen(window, canvas, drawcode)
-    gabe.begin_pixel_screen(canvas)
+    gabe.begin_pixel_screen(canvas, window.clear_color)
     drawcode()
     gabe.end_pixel_screen(window, canvas)
 end
