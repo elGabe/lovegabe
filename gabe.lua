@@ -46,8 +46,24 @@ function gabe.lengthdir(len, dir)
     return math.cos(dir) * len, math.sin(dir) * len
 end
 
+-- Linear interpolation
 function gabe.lerp(a, b, t)
     return a + t * (b - a)
+end
+
+-- Get the sign of a numebr
+function gabe.sign(n)
+    return n > 0 and 1 or (n == 0 and 0 or -1)
+end
+
+-- Convert degrees to radians
+function gabe.deg2rad(degrees)
+    return degrees * (math.pi / 180)
+end
+
+-- Convert radians to degrees
+function gabe.rad2deg(radians)
+    return radians * (180 / math.pi)
 end
 
 ----------------------------------------
@@ -177,6 +193,16 @@ function gabe.overlap(box1, box2, dx, dy)
                 or box1.y1 + dy > box2.y2
                 or box1.x2 + dx < box2.x1
                 or box1.y2 + dy < box2.y1)
+end
+
+-- UPDATE THIS TO CHECK BETWEEN 2 TABLES AS WELL!
+function gabe.check_collisions(object, table)
+    for i = #table, 1, -1 do
+        local object_2 = table[i]
+        if (gabe.overlap(object.bbox, object_2.bbox)) then
+            return object_2
+        end
+    end
 end
 
 ----------------------------------------
