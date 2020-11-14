@@ -66,6 +66,12 @@ function gabe.rad2deg(radians)
     return radians * (180 / math.pi)
 end
 
+-- Clamp a number between two values
+function gabe.clamp(value, min, max)
+    if min > max then min, max = max, min end -- swap if boundaries supplied the wrong way
+    return math.max(min, math.min(max, value))
+end
+
 ----------------------------------------
 -- Color Conversion (Love2D)
 ----------------------------------------
@@ -196,11 +202,26 @@ function gabe.overlap(box1, box2, dx, dy)
 end
 
 -- UPDATE THIS TO CHECK BETWEEN 2 TABLES AS WELL!
-function gabe.check_collisions(object, table)
-    for i = #table, 1, -1 do
-        local object_2 = table[i]
-        if (gabe.overlap(object.bbox, object_2.bbox)) then
-            return object_2
+function gabe.check_collisions(objects_1, objects_2)
+    
+    if (type(objects_1) == "table") then
+        -- For each object
+        for i = #objects_1, 1, -1 do
+            for j = #objects_2, 1, -1 do
+                local obj_1 = objects_1[i]
+                local obj_2 = objects_2[j]
+                if (gabe.overlap(obj_1.bbox, obj_2.bbox)) then
+                    return obj_1, obj_2
+                end
+            end
+        end
+    end
+    
+    -- This happens if 'objects_1' is actually just a single object
+    for i = #objects_2, 1, -1 do
+        local object = objects_2[i]
+        if (gabe.overlap(objects_1.bbox, object.bbox)) then
+            return object
         end
     end
 end
@@ -210,6 +231,10 @@ end
 ----------------------------------------
 
 local TIMERS = {}
+
+function gabe.clear_timers()
+    TIMERS = {}
+end
 
 function gabe.update_timers(dt)
     for i = #TIMERS, 1, -1 do

@@ -3,7 +3,7 @@ local json = require "lovegabe.json"
 local gabe = require "lovegabe.gabe"
 local ogmo = {}
 
-add = table.insert
+local add = table.insert
 
 -- Reads an ogmo json file and takes in a texture to assign to the level
 function ogmo.read_map(path, texture)
