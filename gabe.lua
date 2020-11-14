@@ -324,18 +324,12 @@ function gabe.make_window(width, height, scale, settings, clear_color)
     return window
 end
 
-function gabe.make_pixel_screen(window)
-    window = window or gabe.DEFAULT_WINDOW
-    -- Make a pixel-perfect canvas
-    DEFAULT_CANVAS = gabe.make_canvas(window)
-    return DEFAULT_CANVAS
-end
-
-function gabe.make_canvas(window)
+function gabe.make_pixel_canvas(window)
     window = window or gabe.DEFAULT_WINDOW
     love.graphics.setDefaultFilter("nearest", "nearest")
     local canvas = love.graphics.newCanvas(window.width/window.scale, window.height/window.scale)
     canvas:setFilter("nearest", "nearest")
+    DEFAULT_CANVAS = canvas
     return canvas
 end
 
