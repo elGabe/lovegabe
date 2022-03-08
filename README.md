@@ -15,8 +15,6 @@ A set of Love2D tools by Gabe D.
   - [read_file](#read_file)
 - [Sprites](#sprites)
   - [make_sprite](#make_sprite)
-- [Ogmo](#ogmo)
-  - [read_map](#read_map)
 ---
 ## Utils
 ### add
@@ -171,12 +169,7 @@ Creates a sprite object from **'texture'** with a size of **'width'** and **'hei
 # BBox
 Checks for AABB collisions.
 
-## Ogmo
-### read_map
-Reads a .json map file located at `path` and creates a map table to hold its values.
-
 ## Acknowledgements
 - Love2D
 - json.lua, by rxi (https://github.com/rxi/json.lua)
 - YoYo Games' GameMaker: Studio (1 & 2)
-- Ogmo Editor 3
